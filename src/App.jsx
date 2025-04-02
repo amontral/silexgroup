@@ -1,15 +1,13 @@
-
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import Particles from 'react-tsparticles'
+import { loadFull } from 'tsparticles'
 
 export default function App() {
   const [modal, setModal] = useState(null);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [particlesInit] = useState(() => loadFull);
 
-  const openModal = (type) => {
-    setModal(type);
-    setMenuOpen(false);
-  };
+  const openModal = (type) => setModal(type);
   const closeModal = () => setModal(null);
 
   const Modal = ({ title, content }) => (
@@ -23,46 +21,60 @@ export default function App() {
   );
 
   return (
-    <div className="bg-background text-foreground min-h-screen flex flex-col items-center justify-center font-sans relative overflow-hidden">
-      <div className="absolute w-full h-full bg-gradient-to-br from-[#1f1f22] to-[#0e0e10] animate-pulse opacity-10 z-0"></div>
+    <div className="bg-[#0c0c0e] text-white min-h-screen flex flex-col items-center justify-center font-sans relative overflow-hidden">
+      {/* Particle Background */}
+      <Particles
+        id="tsparticles"
+        init={particlesInit}
+        options={{
+          background: { color: { value: '#0c0c0e' } },
+          fpsLimit: 60,
+          interactivity: { events: { onClick: { enable: false }, resize: true } },
+          particles: {
+            color: { value: '#ffffff' },
+            links: { enable: false },
+            move: { enable: true, speed: 0.3 },
+            number: { value: 30 },
+            opacity: { value: 0.3 },
+            shape: { type: 'circle' },
+            size: { value: { min: 1, max: 2 } }
+          },
+          detectRetina: true
+        }}
+      />
 
-      <button
-        className="fixed top-6 right-6 z-50 text-white border border-white p-2 rounded hover:bg-white hover:text-black transition"
-        onClick={() => setMenuOpen(!menuOpen)}
-      >
-        ☰
-      </button>
+      {/* Top Nav */}
+      <nav className="absolute top-6 flex gap-8 text-sm text-gray-400 z-50">
+        <button onClick={() => openModal('about')} className="hover:text-white">About</button>
+        <button onClick={() => openModal('services')} className="hover:text-white">Services</button>
+        <button onClick={() => openModal('contact')} className="hover:text-white">Contact</button>
+      </nav>
 
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            className="fixed top-20 right-6 bg-background border border-gray-700 text-white rounded shadow-lg p-4 space-y-2 z-50"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3 }}
-          >
-            <button onClick={() => openModal('about')} className="block w-full text-left hover:text-gray-300">About</button>
-            <button onClick={() => openModal('services')} className="block w-full text-left hover:text-gray-300">Services</button>
-            <button onClick={() => openModal('contact')} className="block w-full text-left hover:text-gray-300">Contact</button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
+      {/* Main Content */}
       <motion.h1
-        className="text-5xl md:text-7xl font-bold text-center z-10"
+        className="text-6xl md:text-8xl font-extrabold text-center z-10"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
+        style={{ textShadow: '0 0 10px rgba(255,255,255,0.1)' }}
       >
-        Silex Strategic Group
+        Silex
       </motion.h1>
+      <motion.h2
+        className="text-6xl md:text-8xl font-extrabold text-center z-10 mt-[-10px]"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 1 }}
+        style={{ textShadow: '0 0 10px rgba(255,255,255,0.1)' }}
+      >
+        Strategic Group
+      </motion.h2>
 
       <motion.p
-        className="text-md md:text-lg text-gray-400 mt-4 text-center z-10"
+        className="text-md md:text-lg text-gray-400 mt-6 text-center z-10"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.6, duration: 1 }}
+        transition={{ delay: 0.8, duration: 1 }}
       >
         Strategic Security. Real-World Results.
       </motion.p>
@@ -71,9 +83,10 @@ export default function App() {
         &copy; {new Date().getFullYear()} Silex Strategic Group
       </footer>
 
+      {/* Modals */}
       {modal === 'about' && <Modal title="About" content="Silex Strategic Group empowers businesses through elite physical and information security consulting." />}
       {modal === 'services' && <Modal title="Services" content="• Physical Security\n• InfoSec & Compliance\n• SBSS Certification Prep" />}
-      {modal === 'contact' && <Modal title="Contact" content="Email: info@silexsecurity.com\nPhone: (555) 123-4567" />}
+      {modal === 'contact' && <Modal title="Contact" content="Email: silexstrategicgroup@gmail.com\nPhone: 501-952-7172" />}
     </div>
   )
 }
